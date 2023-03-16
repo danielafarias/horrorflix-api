@@ -54,14 +54,21 @@ server.post("/movies", (req: Request, res: Response) => {
 });
 
 server.put("/movies/:id", (req: Request, res: Response) => {
-    const id = req.params.id;
+  const id = req.params.id;
 
-    const object =
-      req.body;
-  
-    movies[Number(id)] = object;
-  
-    return res.json(movies);
-  });
+  const object = req.body;
+
+  movies[Number(id)] = object;
+
+  return res.json(movies);
+});
+
+server.delete("/movies/:id", (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  movies.splice(Number(id), 1);
+
+  return res.json(movies);
+});
 
 server.listen(3000);
