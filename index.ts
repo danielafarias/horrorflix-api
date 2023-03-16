@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 const express = require("express");
 
@@ -27,17 +27,35 @@ const movies = [
   },
 ];
 
+function checkMovie(req: Request, res: Response, next: NextFunction) {
+  if (!req.body.title) {
+    return res.status(400).json({ error: "Título obrigatório" });
+  }
+
+  return next();
+}
+
+function checkID(req: Request, res: Response, next: NextFunction) {
+  const movie = movies[Number(req.params.id)];
+
+  if (!movie) {
+    return res.status(400).json({ error: "Filme não existe" });
+  }
+
+  return next();
+}
+
 server.get("/movies", (req: Request, res: Response) => {
   return res.json(movies);
 });
 
-server.get("/movies/:id", (req: Request, res: Response) => {
+server.get("/movies/:id", checkID, (req: Request, res: Response) => {
   const id = req.params.id;
 
   return res.json(movies[Number(id)]);
 });
 
-server.post("/movies", (req: Request, res: Response) => {
+server.post("/movies", checkMovie, (req: Request, res: Response) => {
   const { backdrop_path, id, overview, poster_path, title, vote_average } =
     req.body;
 
@@ -53,7 +71,7 @@ server.post("/movies", (req: Request, res: Response) => {
   return res.json(movies);
 });
 
-server.put("/movies/:id", (req: Request, res: Response) => {
+server.put("/movies/:id", checkMovie, checkID, (req: Request, res: Response) => {
   const id = req.params.id;
 
   const object = req.body;
@@ -63,7 +81,7 @@ server.put("/movies/:id", (req: Request, res: Response) => {
   return res.json(movies);
 });
 
-server.delete("/movies/:id", (req: Request, res: Response) => {
+server.delete("/movies/:id", checkID, (req: Request, res: Response) => {
   const id = req.params.id;
 
   movies.splice(Number(id), 1);
