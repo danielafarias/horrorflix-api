@@ -1,8 +1,10 @@
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 
 const express = require("express");
 
 const server = express();
+
+server.use(express.json());
 
 const movies = [
   {
@@ -26,9 +28,6 @@ const movies = [
 ];
 
 server.get("/movies", (req: Request, res: Response) => {
-  // /movies?test=testando
-//   const testQuery = req.query.test;
-
   return res.json(movies);
 });
 
@@ -36,6 +35,22 @@ server.get("/movies/:id", (req: Request, res: Response) => {
   const id = req.params.id;
 
   return res.json(movies[Number(id)]);
+});
+
+server.post("/movies", (req: Request, res: Response) => {
+  const { backdrop_path, id, overview, poster_path, title, vote_average } =
+    req.body;
+
+  movies.push({
+    backdrop_path,
+    id,
+    overview,
+    poster_path,
+    title,
+    vote_average,
+  });
+
+  return res.json(movies);
 });
 
 server.listen(3000);
