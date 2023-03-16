@@ -53,4 +53,15 @@ server.post("/movies", (req: Request, res: Response) => {
   return res.json(movies);
 });
 
+server.put("/movies/:id", (req: Request, res: Response) => {
+    const id = req.params.id;
+
+    const object =
+      req.body;
+  
+    movies[Number(id)] = object;
+  
+    return res.json(movies);
+  });
+
 server.listen(3000);
