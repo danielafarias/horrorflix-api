@@ -1,3 +1,5 @@
+import { Request, Response } from 'express';
+
 const express = require("express");
 
 const server = express();
@@ -23,17 +25,17 @@ const movies = [
   },
 ];
 
-server.get("/movies", (req, res) => {
+server.get("/movies", (req: Request, res: Response) => {
   // /movies?test=testando
 //   const testQuery = req.query.test;
 
   return res.json(movies);
 });
 
-server.get("/movies/:id", (req, res) => {
+server.get("/movies/:id", (req: Request, res: Response) => {
   const id = req.params.id;
 
-  return res.json(movies[id]);
+  return res.json(movies[Number(id)]);
 });
 
 server.listen(3000);
